@@ -1,24 +1,26 @@
 const User = require("../modals/User");
 const bcrypt = require("bcrypt");
 const generateToken = require("../utils/generateToken");
+
 const createUser = async (req, res) => {
   try {
     const { firstName, lastName, email, contactNumber, password } = req.body;
 
     if (!firstName || !lastName || !email || !contactNumber || !password) {
-      return res.status(400).json({ error: "All fields are mandatory" });
+      return res
+        .status(400)
+        .json({ success: false, error: "All fields are mandatory" });
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(409).json({ error: "Email already in use" });
+      return res
+        .status(409)
+        .json({ success: false, error: "Email already in use" });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user
     const newUser = await User.create({
       firstName,
       lastName,
@@ -26,19 +28,24 @@ const createUser = async (req, res) => {
       contactNumber,
       password: hashedPassword,
     });
+
     const token = generateToken(newUser._id);
+
     return res.status(201).json({
+      success: true,
       message: "User created",
       token,
       user: {
         id: newUser._id,
         firstName: newUser.firstName,
+        lastName: newUser.lastName,
         email: newUser.email,
+        contactNumber: newUser.contactNumber,
       },
     });
   } catch (err) {
     console.error("Error creating user:", err);
-    return res.status(500).json({ error: "Server error" });
+    return res.status(500).json({ success: false, error: "Server error" });
   }
 };
 
@@ -46,24 +53,30 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validate input
     if (!email || !password) {
-      return res.status(400).json({ message: "Both fields are required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Both fields are required" });
     }
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid credentials" });
     }
 
     const isMatched = await bcrypt.compare(password, user.password);
     if (!isMatched) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid credentials" });
     }
 
     const token = generateToken(user._id);
 
     return res.status(200).json({
+      success: true,
       message: "Login successful",
       token,
       user: {
@@ -76,7 +89,7 @@ const loginUser = async (req, res) => {
     });
   } catch (err) {
     console.error("Login error:", err);
-    return res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
