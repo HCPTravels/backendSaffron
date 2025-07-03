@@ -1,21 +1,16 @@
 const express = require("express");
 const app = express();
 const connectDB = require("./config/db");
-const userRoutes = require("./routes/userRoutes");
+const routes = require("./routes");
 const cors = require("cors");
-app.use(cors());
-
 require("dotenv").config();
 
-// DB connection
 connectDB();
 
-// Middleware
-app.use(express.json()); // For parsing JSON bodies
+app.use(cors());
+app.use(express.json());
 
-// Route mounting
-app.use("/api/users", userRoutes); // So your full route is /api/users/signup
+app.use("/api", routes); // Route: /api/email/send-otp
 
-// Server
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5002;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
