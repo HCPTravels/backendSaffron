@@ -75,36 +75,20 @@ const sendOtp = async (req, res) => {
 // verify otp
 const verifyOtp = async (req, res) => {
   try {
-    console.log("=== VERIFY OTP DEBUG ===");
-    console.log("Request received");
-    console.log("Request body:", req.body);
-    console.log("Request headers:", req.headers);
-    console.log("Content-Type:", req.headers['content-type']);
     
-    const { email, otp } = req.body;
-    
-    console.log("Extracted email:", email);
-    console.log("Extracted otp:", otp);
-    console.log("Email type:", typeof email);
-    console.log("OTP type:", typeof otp);
 
     if (!email || !otp) {
-      console.log("❌ Validation failed - missing email or otp");
       return res.status(400).json({ message: "Email and OTP are required" });
     }
 
-    console.log("✅ Validation passed, proceeding with OTP verification");
     
     const otpData = await Otp.findOne({ email, otp, used: false });
-    console.log("OTP data from DB:", otpData);
 
     if (!otpData) {
-      console.log("❌ No OTP data found");
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
     if (otpData.expiresAt < new Date()) {
-      console.log("❌ OTP expired");
       return res.status(400).json({ message: "OTP has expired" });
     }
 
