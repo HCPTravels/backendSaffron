@@ -3,11 +3,15 @@ const mongoose = require("mongoose");
 const UserSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    required: true,
+    required: function () {
+      return !this.googleId; // Required only if not Google
+    },
   },
   lastName: {
     type: String,
-    required: true,
+    required: function () {
+      return !this.googleId;
+    },
   },
   email: {
     type: String,
@@ -17,11 +21,31 @@ const UserSchema = new mongoose.Schema({
   },
   contactNumber: {
     type: String,
-    required: true,
+    required: function () {
+      return !this.googleId;
+    },
   },
   password: {
     type: String,
-    required: true,
+    required: function () {
+      return !this.googleId; // Optional for Google
+    },
+  },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true, // Allows multiple nulls while enforcing uniqueness when defined
+  },
+  profileImage: {
+    type: String,
+  },
+  provider: {
+    type: String,
+    default: "local", // "google" for Google users
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 

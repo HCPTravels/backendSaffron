@@ -5,6 +5,7 @@ const { createSellerProduct , getSellerProducts} = require("../controllers/Selle
 
 router.post("/create", authMiddleware, createSellerProduct);
 router.get("/get", authMiddleware, getSellerProducts);
+router.delete("/delete/:productId", authMiddleware, getSellerProducts);
 
 // test route
 router.get("/test", (req, res) => {

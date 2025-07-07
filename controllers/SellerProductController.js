@@ -100,7 +100,36 @@ const getSellerProducts = async (req, res) => {
 // Example route setup:
 // router.get('/seller/products', authenticateToken, getSellerProducts);
 
+const deleteProduct = async (req, res) => {
+    try {
+        const { productId } = req.params;
+
+        if (!productId) {
+            return res.status(400).json({ success: false, error: "Product ID is required" });
+        }
+
+        const product = await SellerProduct.findById(productId);
+
+        if (!product) {
+            return res.status(404).json({ success: false, error: "Product not found" });
+        }
+
+        if (product.seller.toString() !== req.seller._id.toString()) {
+            return res.status(403).json({ success: false, error: "You are not authorized to delete this product" });
+        }
+
+        await product.remove();
+
+        return res.status(200).json({ success: true, message: "Product deleted successfully" });
+
+    } catch (err) {
+        console.error("Error deleting product:", err);
+        return res.status(500).json({ success: false, error: "Server error" });
+    }
+};
+
 module.exports = {
     createSellerProduct,
-    getSellerProducts
+    getSellerProducts,
+    deleteProduct
 };  
