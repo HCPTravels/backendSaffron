@@ -108,6 +108,7 @@ const deleteProduct = async (req, res) => {
             return res.status(400).json({ success: false, error: "Product ID is required" });
         }
 
+        // Check if product exists and user has permission
         const product = await SellerProduct.findById(productId);
 
         if (!product) {
@@ -118,9 +119,18 @@ const deleteProduct = async (req, res) => {
             return res.status(403).json({ success: false, error: "You are not authorized to delete this product" });
         }
 
-        await product.remove();
+        // ✅ Use findByIdAndDelete instead
+        const deletedProduct = await SellerProduct.findByIdAndDelete(productId);
+        
+        if (!deletedProduct) {
+            return res.status(500).json({ success: false, error: "Failed to delete product" });
+        }
 
-        return res.status(200).json({ success: true, message: "Product deleted successfully" });
+        return res.status(200).json({ 
+            success: true, 
+            message: "Product deleted successfully",
+            deletedProductId: productId
+        });
 
     } catch (err) {
         console.error("Error deleting product:", err);
