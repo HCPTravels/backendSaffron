@@ -14,7 +14,27 @@ connectDB();
 require("./config/passport");
 
 // Middleware
-app.use(cors());
+// Replace your current app.use(cors()); with this:
+app.use(cors({
+    origin: [
+      // Local development
+      'http://localhost:3000',
+      'http://localhost:3001', 
+      'http://localhost:5173',
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:3001',
+      'http://127.0.0.1:5173',
+      // Production domains
+      'https://www.kisansaffrononline.com',
+      'https://kisansaffrononline.com',  // Without www
+      'https://kisansaffrononline.vercel.app'  // If you have a Vercel subdomain
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+    optionsSuccessStatus: 200
+  }));
+  
 app.use(express.json());
 
 // ✅ Session middleware (required if using sessions)
