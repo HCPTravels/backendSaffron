@@ -14,7 +14,7 @@ connectDB();
 require("./config/passport");
 
 // Middleware
-// Replace your current app.use(cors()); with this:
+// ✅ FIXED: Added PATCH method to the allowed methods
 app.use(cors({
     origin: [
       // Local development
@@ -30,10 +30,10 @@ app.use(cors({
       'https://kisansaffrononline.vercel.app'  // If you have a Vercel subdomain
     ],
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], // 🔥 Added PATCH here
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
     optionsSuccessStatus: 200
-  }));
+}));
   
 app.use(express.json());
 

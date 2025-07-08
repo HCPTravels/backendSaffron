@@ -4,7 +4,7 @@ const generateToken = require("../utils/generateToken");
 
 const createUser = async (req, res) => {
   try {
-    const { firstName, lastName, email, contactNumber, password } = req.body;
+    const { firstName, lastName, email, contactNumber, password, role } = req.body;
 
     if (!firstName || !lastName || !email || !contactNumber || !password) {
       return res
@@ -27,6 +27,7 @@ const createUser = async (req, res) => {
       email,
       contactNumber,
       password: hashedPassword,
+      role:role || "user", // Default role is 'user'
     });
 
     const token = generateToken(newUser._id);
@@ -41,6 +42,7 @@ const createUser = async (req, res) => {
         lastName: newUser.lastName,
         email: newUser.email,
         contactNumber: newUser.contactNumber,
+        role: newUser.role
       },
     });
   } catch (err) {
@@ -101,6 +103,7 @@ const loginUser = async (req, res) => {
         lastName: user.lastName,
         email: user.email,
         contactNumber: user.contactNumber,
+        role: user.role, // ← ADD THIS LINE
       },
     });
   } catch (err) {

@@ -69,6 +69,7 @@ const sendOTPEmail = async (recipientEmail, otp, recipientName = 'User') => {
   }
 };
 
+
 module.exports = {
   createTransporter,
   sendOTPEmail

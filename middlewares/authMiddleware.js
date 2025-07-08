@@ -1,6 +1,7 @@
 // authMiddleware.js
 const Seller = require('../modals/Seller');
 const jwt = require('jsonwebtoken');
+const User = require('../modals/User'); // Assuming you have a User model for authentication
 
 module.exports = async function (req, res, next) {
   const token = req.headers.authorization?.split(' ')[1];
@@ -16,3 +17,4 @@ module.exports = async function (req, res, next) {
     res.status(401).json({ message: 'Invalid token' });
   }
 };
+

@@ -1,6 +1,7 @@
 const SellerProduct = require('../modals/SellerProduct');
 const Seller = require('../modals/Seller');
 
+
 const createSellerProduct = async (req, res) => {
     try {
         const { name, grade, price, description, images, stock, origin } = req.body;
@@ -137,9 +138,67 @@ const deleteProduct = async (req, res) => {
         return res.status(500).json({ success: false, error: "Server error" });
     }
 };
+// get all producst fro the admin review
+
+const getPendingProducts = async(req, res) => {
+    try{
+        const pendingProducts = await SellerProduct.find({ status: "pending" }).populate("seller");
+        res.json(pendingProducts);
+    }catch(err){
+        console.error(err)
+        res.status(500).json({message : "Something Went wrong"})
+    }
+}
+
+const approvedProduct = async (req, res) => {
+    try {
+      const { id } = req.params;
+  
+      const product = await SellerProduct.findById(id);
+      if (!product) return res.status(404).json({ message: "Product not found" });
+  
+      if (product.status !== "pending") {
+        return res.status(400).json({ message: "Product is already processed" });
+      }
+  
+      const sellerPrice = parseFloat(product.price);
+      const marginPercentage = 20; // 💰 your default margin percentage
+      const marginAmount = (marginPercentage / 100) * sellerPrice;
+      const finalPrice = sellerPrice + marginAmount;
+  
+      product.status = "approved";
+      product.margin = marginAmount;
+      product.finalPrice = finalPrice;
+  
+      await product.save();
+    
+  
+      res.json({
+        message: "Product approved successfully",
+        product,
+      });
+    } catch (err) {
+      console.error("Approve error:", err);
+      res.status(500).json({ message: "Something went wrong" });
+    }
+  };
+
+  const getApprovedProducts = async(req, res) => {
+    try{
+        const approvedProduct = await SellerProduct.find({status: "approved"}).populate("seller")
+        res.json(approvedProduct)
+
+    }catch(err){
+        console.error(err)
+        res.status(500).json({message : "Something went wrong"})
+    }
+  }
 
 module.exports = {
     createSellerProduct,
     getSellerProducts,
-    deleteProduct
+    deleteProduct,
+    getPendingProducts,
+    approvedProduct,
+    getApprovedProducts
 };  
