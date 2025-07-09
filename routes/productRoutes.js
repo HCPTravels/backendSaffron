@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 const authMiddleware = require("../middlewares/authMiddleware");
-const authRole = require("../middlewares/authUsers");
+const authUsers = require("../middlewares/authUsers");
+const authAdmin = require("../middlewares/authAdmin")
 
 const {
   createSellerProduct,
@@ -19,11 +20,11 @@ router.get("/get", authMiddleware, getSellerProducts);
 router.delete("/delete/:productId", authMiddleware, deleteProduct);
 
 // Admin-only routes
-router.get("/get/pending", authRole(['admin']), getPendingProducts);
-router.patch("/approve/:id", authRole(['admin']), approvedProduct);
+router.get("/get/pending", authAdmin, getPendingProducts);
+router.patch("/approve/:id", authAdmin, approvedProduct);
 
 // User + Admin can see approved products
-router.get("/approved/product", authRole(['admin', 'user']), getApprovedProducts);
+router.get("/approved/product", authUsers, getApprovedProducts);
 
 // Test route
 router.get("/test", (req, res) => {
