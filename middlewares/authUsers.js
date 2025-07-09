@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
-const User = require('../modals/User');
+const jwt = require("jsonwebtoken");
+const User = require("../modals/User");
 
 const authUser = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -15,6 +15,7 @@ const authUser = async (req, res, next) => {
     }
 
     req.user = user;
+    req.email = user.email; // Store email in request for later use
     next();
   } catch (err) {
     console.error("authUser error:", err);
