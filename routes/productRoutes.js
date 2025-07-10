@@ -3,7 +3,7 @@ const router = express.Router();
 
 const authMiddleware = require("../middlewares/authMiddleware");
 const authUsers = require("../middlewares/authUsers");
-const authAdmin = require("../middlewares/authAdmin")
+const authAdmin = require("../middlewares/authAdmin");
 
 const {
   createSellerProduct,
@@ -11,7 +11,8 @@ const {
   deleteProduct,
   getPendingProducts,
   approvedProduct,
-  getApprovedProducts
+  getApprovedProducts,
+  getApprovedProductsById,
 } = require("../controllers/SellerProductController");
 
 // Seller routes (authenticated user)
@@ -25,6 +26,7 @@ router.patch("/approve/:id", authAdmin, approvedProduct);
 
 // User + Admin can see approved products
 router.get("/approved/product", authUsers, getApprovedProducts);
+router.get("/approved/product/:id", authUsers, getApprovedProductsById);
 
 // Test route
 router.get("/test", (req, res) => {
