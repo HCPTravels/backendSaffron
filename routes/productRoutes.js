@@ -4,6 +4,9 @@ const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
 const authUsers = require("../middlewares/authUsers");
 const authAdmin = require("../middlewares/authAdmin");
+const authAdmin = require("../middlewares/authAdmin")
+const upload = require('../middlewares/multer');
+
 
 const {
   createSellerProduct,
@@ -16,7 +19,7 @@ const {
 } = require("../controllers/SellerProductController");
 
 // Seller routes (authenticated user)
-router.post("/create", authMiddleware, createSellerProduct);
+router.post("/create", authMiddleware,upload.array('images', 5), createSellerProduct);
 router.get("/get", authMiddleware, getSellerProducts);
 router.delete("/delete/:productId", authMiddleware, deleteProduct);
 

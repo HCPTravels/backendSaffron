@@ -1,46 +1,46 @@
-const SellerProduct = require("../modals/SellerProduct");
-const Seller = require("../modals/Seller");
+const SellerProduct = require('../modals/SellerProduct');
+const Seller = require('../modals/Seller');
+const cloudinary = require('../utils/cloudinary');
 
 const createSellerProduct = async (req, res) => {
   try {
-    const { name, grade, price, description, images, stock, origin } = req.body;
+    const { name, grade, price, description, stock, origin } = req.body;
 
-    if (
-      !name ||
-      !grade ||
-      !price ||
-      !description ||
-      !images ||
-      !stock ||
-      !origin
-    ) {
-      return res
-        .status(400)
-        .json({ success: false, error: "All fields are mandatory" });
+    if (!name || !grade || !price || !description || !stock || !origin || !req.files) {
+      return res.status(400).json({ success: false, error: "All fields are mandatory including images" });
     }
+
+    // Upload each file to Cloudinary and collect URLs
+    const imageUploadPromises = req.files.map(file => {
+      const base64Image = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
+      return cloudinary.uploader.upload(base64Image, { folder: 'products' });
+    });
+
+    const uploadResults = await Promise.all(imageUploadPromises);
+    const imageUrls = uploadResults.map(result => result.secure_url);
 
     const newProduct = await SellerProduct.create({
       name,
       grade,
       price,
       description,
-      images,
+      images: imageUrls,
       stock,
       origin,
-      seller: req.seller._id, // Assuming req.seller is set by an authentication middleware
+      seller: req.seller._id // Assumes authentication middleware sets this
     });
 
     return res.status(201).json({
       success: true,
       message: "Product created successfully",
-      product: newProduct,
+      product: newProduct
     });
+
   } catch (err) {
     console.error("Error creating product:", err);
     return res.status(500).json({ success: false, error: "Server error" });
   }
 };
-
 // Updated backend function - replace your existing getSellerProducts function
 const getSellerProducts = async (req, res) => {
   try {

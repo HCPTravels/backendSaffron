@@ -121,7 +121,7 @@ const verifyOtp = async (req, res) => {
 
     console.log("21. Marking OTP as used");
     otpData.used = true;
-    await otpData.save();
+    await Otp.deleteOne({ _id: otpData._id });
     console.log("22. OTP marked as used successfully");
 
     console.log("23. Sending success response");
