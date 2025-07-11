@@ -213,6 +213,27 @@ const getApprovedProducts = async (req, res) => {
   }
 };
 
+
+const rejectProduct = async(req, res) => {
+    try{
+        const {id} = req.params;
+        const {rejectionReason} = req.body;
+        const product = await SellerProduct.findById(id);
+        if (!product) return res.status(404).json({ message: "Product not found" });
+        product.status = "rejected";
+        product.rejectComment = rejectionReason || "No reason provided";
+        await product.save();
+
+        res.json({
+            message: "Product rejected successfully",
+            product,
+          });
+
+    }catch(err){
+        console.error(err)
+    }
+}
+
 const getApprovedProductsById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -231,6 +252,19 @@ const getApprovedProductsById = async (req, res) => {
   }
 };
 
+const getRejectedProduct = async(req, res) =>{
+    try{
+        const rejectedProduct = await SellerProduct.find({
+            status: 'rejected',
+        })
+        res.json(rejectedProduct)
+
+    }catch(err){
+        console.error(err)
+        res.status(500).json({message:"Something Went Wrong"})
+    }
+}
+
 module.exports = {
   createSellerProduct,
   getSellerProducts,
@@ -239,4 +273,6 @@ module.exports = {
   approvedProduct,
   getApprovedProducts,
   getApprovedProductsById,
+  rejectProduct,
+  getRejectedProduct 
 };

@@ -24,6 +24,9 @@ const sellerProductSchema = new mongoose.Schema({
   finalPrice: {  // ✅ corrected key
     type: Number,
   },
+  rejectComment:{
+    type:String
+  },
 }, { timestamps: true });
 
 const SellerProduct = mongoose.model('SellerProduct', sellerProductSchema);

@@ -1,6 +1,7 @@
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const Order = require("../modals/Orders");
+const Cart = require('../modals/Cart')
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -41,8 +42,7 @@ const createOrder = async (req, res) => {
 
 // Step 2: Verify Payment Signature
 const verifyPayment = async (req, res) => {
-  const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
-    req.body;
+  const { razorpay_payment_id, razorpay_order_id, razorpay_signature } = req.body;
 
   const generated_signature = crypto
     .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
@@ -52,17 +52,29 @@ const verifyPayment = async (req, res) => {
   const isValid = generated_signature === razorpay_signature;
 
   if (isValid) {
-    // ✅ Save payment info in Orders collection
-    await Order.findOneAndUpdate(
-      { razorpayOrderId: razorpay_order_id },
-      {
-        status: "PAID",
-        razorpayPaymentId: razorpay_payment_id,
-        razorpaySignature: razorpay_signature,
-      }
-    );
+    try {
+      // ✅ Update order status
+      const order = await Order.findOneAndUpdate(
+        { razorpayOrderId: razorpay_order_id },
+        {
+          status: "PAID",
+          razorpayPaymentId: razorpay_payment_id,
+          razorpaySignature: razorpay_signature,
+        },
+        { new: true }
+      );
 
-    return res.json({ success: true });
+      // ✅ Clear cart after payment
+      await Cart.findOneAndUpdate(
+        { userId: order.userId },
+        { $set: { items: [] } }
+      );
+
+      return res.json({ success: true });
+    } catch (err) {
+      console.error("Error during post-payment handling:", err);
+      return res.status(500).json({ success: false, message: "Server error" });
+    }
   } else {
     return res
       .status(400)
