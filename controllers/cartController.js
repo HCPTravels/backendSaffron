@@ -22,7 +22,10 @@ const addToCart = async (req, res) => {
     }
 
     await cart.save();
-    res.status(200).json({ success: true, cart });
+    
+    // ✅ Populate product details before sending response
+    const populatedCart = await Cart.findOne({ userId }).populate("items.productId");
+    res.status(200).json({ success: true, cart: populatedCart });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
@@ -76,7 +79,16 @@ const updateQuantity = async (req, res) => {
     item.quantity = quantity;
     await cart.save();
 
-    res.status(200).json({ success: true, cart });
+    // ✅ FIX: Populate product details before sending response
+    const populatedCart = await Cart.findOne({ userId }).populate("items.productId");
+    
+    // Filter out any null products
+    const filteredItems = populatedCart.items.filter((item) => item.productId !== null);
+    
+    res.status(200).json({ 
+      success: true, 
+      cart: { ...populatedCart.toObject(), items: filteredItems }
+    });
   } catch (error) {
     console.error("Error updating cart quantity:", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -103,9 +115,13 @@ const removeItem = async (req, res) => {
 
     await cart.save();
 
+    // ✅ Already populating correctly
+    const populatedCart = await Cart.findOne({ userId }).populate("items.productId");
+    const filteredItems = populatedCart.items.filter((item) => item.productId !== null);
+
     res.json({
       success: true,
-      cart: await Cart.findOne({ userId }).populate("items.productId"),
+      cart: { ...populatedCart.toObject(), items: filteredItems }
     });
   } catch (error) {
     res.status(500).json({
@@ -144,7 +160,7 @@ const clearCart = async (req, res) => {
 module.exports = {
   addToCart,
   getCart,
-  updateQuantity, // Export the new functions
+  updateQuantity,
   removeItem,
   clearCart,
 };
