@@ -13,7 +13,7 @@ const router = express.Router();
 router.post("/add", authUser, addToCart); // ✅ no role array
 router.get("/getcartproduct", authUser, getCart); // ✅ cleaner, safer
 router.patch("/updatequantity/:productId", authUser, updateQuantity);
-router.delete("/:productId", authUser, removeItem);
+router.delete("/removeitem/:productId", authUser, removeItem);
 router.delete("/clear", authUser, clearCart);
 
 module.exports = router;
