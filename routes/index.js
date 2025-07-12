@@ -9,6 +9,7 @@ const authRoutes = require("./authRoutes"); // ✅ Add this line
 const cartRoutes = require("../routes/cartRoutes");
 const paymentRoutes = require("./paymentRoutes"); // ✅ Import payment routes
 const uploadRoutes = require("../routes/uploadRoutes")
+const contactRoutes = require("../routes/contactRoutes")
 
 router.use("/user", userRoutes);
 router.use("/email", emailRoutes);
@@ -18,5 +19,6 @@ router.use("/auth", authRoutes); // ✅ Mount Google auth routes here
 router.use("/cart", cartRoutes);
 router.use("/payment", paymentRoutes); // ✅ Mount payment routes here
 router.use("/image", uploadRoutes)
+router.use("/contact", contactRoutes)
 
 module.exports = router;
