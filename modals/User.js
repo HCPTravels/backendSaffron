@@ -52,6 +52,10 @@ const UserSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
+  wishlist: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'SellerProduct'
+  }]
 });
 
 const User = mongoose.model("User", UserSchema);
