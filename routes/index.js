@@ -8,9 +8,10 @@ const productRoutes = require("./productRoutes");
 const authRoutes = require("./authRoutes"); // ✅ Add this line
 const cartRoutes = require("../routes/cartRoutes");
 const paymentRoutes = require("./paymentRoutes"); // ✅ Import payment routes
-const uploadRoutes = require("../routes/uploadRoutes")
-const contactRoutes = require("../routes/contactRoutes")
+const uploadRoutes = require("../routes/uploadRoutes");
+const contactRoutes = require("../routes/contactRoutes");
 const wishlistRoutes = require("./wishlistRoutes");
+const reviewsRoutes = require("./reviewsRoutes"); // ✅ Import reviews routes
 
 router.use("/user", userRoutes);
 router.use("/email", emailRoutes);
@@ -19,8 +20,9 @@ router.use("/product", productRoutes);
 router.use("/auth", authRoutes); // ✅ Mount Google auth routes here
 router.use("/cart", cartRoutes);
 router.use("/payment", paymentRoutes); // ✅ Mount payment routes here
-router.use("/image", uploadRoutes)
-router.use("/contact", contactRoutes)
-router.use("/wishlist", wishlistRoutes)
+router.use("/image", uploadRoutes);
+router.use("/contact", contactRoutes);
+router.use("/wishlist", wishlistRoutes);
+router.use("/reviews", reviewsRoutes);
 
 module.exports = router;
