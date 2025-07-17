@@ -1,10 +1,9 @@
-// models/Order.js
 const mongoose = require("mongoose");
 
 const OrderSchema = new mongoose.Schema(
   {
     userId: {
-      type: mongoose.Schema.Types.ObjectId, // or String, if you don't use ObjectId
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
     userEmail: {
@@ -37,9 +36,24 @@ const OrderSchema = new mongoose.Schema(
       enum: ["CREATED", "PAID", "FAILED"],
       default: "CREATED",
     },
+    // 👇 Multiple products per order
+    items: [
+      {
+        productId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "SellerProduct",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+        // Add more fields if needed (e.g., price, name, etc.)
+      }
+    ]
   },
   {
-    timestamps: true, // Automatically adds createdAt and updatedAt fields
+    timestamps: true,
   }
 );
 
