@@ -12,6 +12,8 @@ const uploadRoutes = require("../routes/uploadRoutes");
 const contactRoutes = require("../routes/contactRoutes");
 const wishlistRoutes = require("./wishlistRoutes");
 const reviewsRoutes = require("./reviewsRoutes"); // ✅ Import reviews routes
+const forgetOtpRoutes = require("./forgetOtpRoutes")
+const forgetPassRoutes = require("./forgetPassRoutes")
 
 router.use("/user", userRoutes);
 router.use("/email", emailRoutes);
@@ -24,5 +26,10 @@ router.use("/image", uploadRoutes);
 router.use("/contact", contactRoutes);
 router.use("/wishlist", wishlistRoutes);
 router.use("/reviews", reviewsRoutes);
+router.use("/image", uploadRoutes)
+router.use("/contact", contactRoutes)
+router.use("/wishlist", wishlistRoutes)
+router.use("/forget", forgetOtpRoutes);
+router.use("/new", forgetPassRoutes);
 
 module.exports = router;
