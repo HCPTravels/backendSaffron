@@ -31,17 +31,19 @@ router.get(
           id: user._id,
           email: user.email,
           username: user.username,
+          role: user.role,
         },
         process.env.JWT_SECRET,
         { expiresIn: "7d" }
       );
       console.log("Token generated:", token);
+      console.log("User Retrived:", user);
       // ✅ (Optional) CORS header to allow the browser redirect
       res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
       res.setHeader("Access-Control-Allow-Credentials", "true");
 
       // 🔁 Redirect to frontend with token
-      res.redirect(`http://localhost:5173/login-success?token=${token}`);
+      res.redirect(`${process.env.CLIENT_URL}/login-success?token=${token}`);
     } catch (error) {
       console.error("OAuth callback error:", error);
       res.redirect("http://localhost:5173/login?error=server_error");
