@@ -2,6 +2,7 @@ const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const Order = require("../modals/Orders");
 const Cart = require('../modals/Cart');
+const User = require("../modals/User")
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -31,7 +32,7 @@ const createOrder = async (req, res) => {
 // Step 2: Verify Payment Signature and Create DB Order
 // ... existing code ...
 const verifyPayment = async (req, res) => {
-  const { razorpay_payment_id, razorpay_order_id, razorpay_signature, items } = req.body;
+  const { razorpay_payment_id, razorpay_order_id, razorpay_signature, items, shippingAddress } = req.body;
   const userId = req.user._id;
   const userEmail = req.user.email;
 
@@ -65,6 +66,10 @@ const verifyPayment = async (req, res) => {
         currency: "INR",
         status: "PAID",
         items: orderItems, // save the flattened items
+        shippingAddress
+      });
+      await User.findByIdAndUpdate(userId, {
+        $addToSet: { addresses: shippingAddress } // avoids duplicates
       });
 
       // Clear cart after payment

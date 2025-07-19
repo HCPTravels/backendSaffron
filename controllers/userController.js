@@ -142,4 +142,19 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { createUser, loginUser, deleteUser };
+const userAddress = async(req, res) =>{
+  try{
+    const userId = req.user._id;
+
+  const user = await User.findById(userId).select("addresses")
+  if(!user){
+    return res.status(404).json({message :"user is not found"})
+  }
+  res.json(user.addresses)
+  }catch(err){
+    console.error("Error fetching addresses:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+module.exports = { createUser, loginUser, deleteUser,userAddress};

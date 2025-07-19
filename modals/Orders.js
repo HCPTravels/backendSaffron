@@ -36,7 +36,6 @@ const OrderSchema = new mongoose.Schema(
       enum: ["CREATED", "PAID", "FAILED"],
       default: "CREATED",
     },
-    // 👇 Multiple products per order
     items: [
       {
         productId: {
@@ -48,9 +47,20 @@ const OrderSchema = new mongoose.Schema(
           type: Number,
           required: true,
         },
-        // Add more fields if needed (e.g., price, name, etc.)
       }
-    ]
+    ],
+    // ✅ Address inside main schema
+    shippingAddress: {
+      firstName: String,
+      lastName: String,
+      email: String,
+      phone: String,
+      address: String,
+      city: String,
+      state: String,
+      pincode: String,
+      landmark: String,
+    }
   },
   {
     timestamps: true,

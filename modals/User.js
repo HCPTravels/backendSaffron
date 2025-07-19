@@ -55,7 +55,20 @@ const UserSchema = new mongoose.Schema({
   wishlist: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'SellerProduct'
-  }]
+  }],
+  addresses: [
+    {
+      firstName: String,
+      lastName: String,
+      email: String,
+      phone: String,
+      address: String,
+      city: String,
+      state: String,
+      pincode: String,
+      landmark: String
+    }
+  ]
 });
 
 const User = mongoose.model("User", UserSchema);
