@@ -25,13 +25,17 @@ app.use(
       "http://127.0.0.1:3000",
       "http://127.0.0.1:3001",
       "http://127.0.0.1:5173",
+
       // Production domains
       "https://www.kisansaffrononline.com",
-      "https://kisansaffrononline.com", // Without www
-      "https://kisansaffrononline.vercel.app", // If you have a Vercel subdomain
+      "https://kisansaffrononline.com",
+      "https://kisansaffrononline.vercel.app",
+      
+      // 🛠️ ADD THIS:
+      "https://new-saffron-hcp-travel.vercel.app",
     ],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], // 🔥 Added PATCH here
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: [
       "Content-Type",
       "Authorization",

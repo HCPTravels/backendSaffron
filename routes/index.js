@@ -14,6 +14,8 @@ const wishlistRoutes = require("./wishlistRoutes");
 const reviewsRoutes = require("./reviewsRoutes"); // ✅ Import reviews routes
 const forgetOtpRoutes = require("./forgetOtpRoutes")
 const forgetPassRoutes = require("./forgetPassRoutes")
+const addressRoutes = require("./addressRoutes");
+const passUpdateRoutes = require("./passUpdateRoutes"); // ✅ Import password update routes
 
 router.use("/user", userRoutes);
 router.use("/email", emailRoutes);
@@ -31,5 +33,7 @@ router.use("/contact", contactRoutes)
 router.use("/wishlist", wishlistRoutes)
 router.use("/forget", forgetOtpRoutes);
 router.use("/new", forgetPassRoutes);
+router.use("/address", addressRoutes);
+router.use("/update", passUpdateRoutes); // ✅ Mount password update routes here
 
 module.exports = router;
